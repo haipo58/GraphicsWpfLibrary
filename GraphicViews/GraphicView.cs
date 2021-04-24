@@ -42,12 +42,17 @@ namespace GraphicsWpfLibrary
         [XmlIgnore]
         public Action<DrawingContext> AdditionalRenderAction;
 
-        public GraphicView()
-        {
-            UI = new() { Graphic = this };
-        }
+        public GraphicView() => UI = new() { Graphic = this };
 
         public virtual void Render(DrawingContext dc) => AdditionalRenderAction?.Invoke(dc);
+
+        public void RenderDefaultShpaes(DrawingContext dc)
+        {
+            Pen pen = IsSelected ? SectionView.ProtectPen : SectionView.ClearPen;
+
+            foreach (var shape in Shapes)
+                shape.Render(dc, pen, Brushes.Black);
+        }
 
         public bool InRange(Point checkPoint, ref Point connectPoint, double range)
         {

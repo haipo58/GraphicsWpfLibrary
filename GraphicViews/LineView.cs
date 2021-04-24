@@ -19,8 +19,7 @@ namespace GraphicsWpfLibrary
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            Pen pen = LinePen ?? (IsSelected ? SectionView.ProtectPen : SectionView.ClearPen);
-            Shapes[0].Render(dc, pen);
+            RenderDefaultShpaes(dc);
         }
     }
 }

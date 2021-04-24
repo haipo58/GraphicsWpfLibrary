@@ -17,19 +17,17 @@ namespace GraphicsWpfLibrary
         public SectionStatus Status { get; } = new();
 
         [PropertyIgnore, XmlIgnore]
-        public SectionNode Node { get; set; }
+        public SectionCore Node { get; set; }
 
         #region render
 
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            RenderShapes(dc);
+            DrawSectionLines(dc, GetSectionPen(Status), Shapes, Status.IsBlocked);
             RenderName(dc);
         }
 
-        private void RenderShapes(DrawingContext dc) =>
-            DrawSectionLines(dc, GetSectionPen(Status), Shapes, Status.IsBlocked);
 
         public static void DrawSectionLines(DrawingContext dc, Pen pen, IEnumerable<Shape> shapes, bool isBlocked)
         {

@@ -33,7 +33,7 @@ namespace GraphicsWpfLibrary
         public bool IsUpOpen { get; set; }
 
         [PropertyIgnore, XmlIgnore]
-        public RailswitchNode Node { get; set; }
+        public RailswitchCore Node { get; set; }
 
         #region shapes
         [PropertyIgnore]
@@ -115,9 +115,9 @@ namespace GraphicsWpfLibrary
         private static void DrawNail(DrawingContext dc, Pen pen, Line nail, bool isBlocked)
         {
             if (isBlocked)
-                dc.DrawLine(SectionView.BlockPen, nail.Pt0, nail.Pt1);
+                nail.Render(dc, SectionView.BlockPen);
 
-            dc.DrawLine(pen, nail.Pt0, nail.Pt1);
+            nail.Render(dc, pen);
         }
 
         #endregion

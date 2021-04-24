@@ -16,7 +16,10 @@ namespace GraphicsWpfLibrary
         [XmlElement("Railswitch", typeof(RailswitchView))]
         [XmlElement("Signal", typeof(SignalView))]
         [XmlElement("Line", typeof(LineView))]
-        [XmlElement("End", typeof(EndLine))]
+        [XmlElement("End", typeof(EndLineView))]
+        [XmlElement("Text", typeof(TextView))]
+        [XmlElement("Station", typeof(StationView))]
+        [XmlElement("PSDoor", typeof(PSDoorView))]
         public List<GraphicView> Graphics { get; set; } = new List<GraphicView>();
 
         public void Save(string fileName)
@@ -57,11 +60,22 @@ namespace GraphicsWpfLibrary
             return graphicsModel;
         }
 
+        public void SetSignalsDirection(DeviceDirection rightDirection)
+        {
+            DeviceDirection leftDirection = rightDirection == DeviceDirection.UpDir
+                ? DeviceDirection.DownDir : DeviceDirection.UpDir;
+
+            foreach (var graphic in Graphics)
+                if (graphic is SignalView signal)
+                    signal.Model.Direction = signal.IsLeftSide ? leftDirection : rightDirection;
+        }
+
         public static CbiModel AddtoModels(CbiModel cbiModel, List<GraphicView> graphics)
         {
             foreach (var graphic in graphics)
                 if (graphic is DeviceView device)
                     cbiModel.Devices.Add(device.DeviceInfo);
+
             return cbiModel;
         }
 
@@ -76,6 +90,11 @@ namespace GraphicsWpfLibrary
 
                     if (device is SignalView signal)
                         signal.LoadFromShapes();
+                }
+                else if (graphic is StationView station)
+                {
+                    foreach (var door in station.Doors)
+                        canvas.Children.Add(door.UI);
                 }
 
                 canvas.Children.Add(graphic.UI);
