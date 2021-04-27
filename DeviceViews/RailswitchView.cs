@@ -26,12 +26,6 @@ namespace GraphicsWpfLibrary
             || Status.Position == RailswitchPosition.None
             || Status.Position == RailswitchPosition.Fault;
 
-        [PropertyIgnore, XmlAttribute]
-        public bool IsLeftOpen { get; set; }
-
-        [PropertyIgnore, XmlAttribute]
-        public bool IsUpOpen { get; set; }
-
         [PropertyIgnore, XmlIgnore]
         public RailswitchCore Node { get; set; }
 
