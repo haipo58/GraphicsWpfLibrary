@@ -29,12 +29,16 @@ namespace GraphicsWpfLibrary
         }
 
 
-        public static void DrawSectionLines(DrawingContext dc, Pen pen, IEnumerable<Shape> shapes, bool isBlocked)
+        public static void DrawSectionLines(DrawingContext dc, Pen pen, IEnumerable<Shape> shapes
+            , bool isBlocked, bool isSingleLocked = false)
         {
             foreach (var line in shapes)
             {
                 if (isBlocked)
                     line.Render(dc, BlockPen);
+
+                if (isSingleLocked)
+                    line.Render(dc, SingleLockPen);
 
                 line.Render(dc, pen);
             }
@@ -53,14 +57,16 @@ namespace GraphicsWpfLibrary
         {
             OccupyPen = new Pen(Brushes.Red, value);
             LockPen = new Pen(Brushes.White, value);
-            BlockPen = new Pen(Brushes.Silver, value + 2);
+            BlockPen = new Pen(Brushes.Red, value + 6);
+            SingleLockPen = new Pen(Brushes.Silver, value + 6);
             ProtectPen = new Pen(Brushes.Yellow, value);
             ClearPen = new Pen(Brushes.Cyan, value);
         }
 
         public static Pen OccupyPen { get; private set; } = new Pen(Brushes.Red, 3);
         public static Pen LockPen { get; private set; } = new Pen(Brushes.White, 3);
-        public static Pen BlockPen { get; private set; } = new Pen(Brushes.Silver, 5);
+        public static Pen BlockPen { get; private set; } = new Pen(Brushes.Red, 7);
+        public static Pen SingleLockPen { get; private set; } = new Pen(Brushes.Silver, 7);
         public static Pen ProtectPen { get; private set; } = new Pen(Brushes.Yellow, 3);
         public static Pen ClearPen { get; private set; } = new Pen(Brushes.Cyan, 3);
 

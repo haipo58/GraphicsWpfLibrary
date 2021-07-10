@@ -42,5 +42,7 @@ namespace GraphicsWpfLibrary
         }
 
         public override string ToString() => $"{DeviceInfo.Name}";
+
+        public virtual void AddShape(Shape shape) => Shapes.Add(shape);
     }
 }

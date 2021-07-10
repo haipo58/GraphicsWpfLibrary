@@ -1,5 +1,6 @@
 ﻿using RailwaySignalsModels;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
@@ -50,7 +51,7 @@ namespace GraphicsWpfLibrary
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            RenderShapes(dc, SectionView.GetSectionPen(SectionStatus), SectionStatus.IsBlocked);
+            RenderShapes(dc, SectionView.GetSectionPen(SectionStatus), SectionStatus.IsBlocked, Status.IsSingleLocked);
             RenderName(dc);
         }
 
@@ -65,51 +66,56 @@ namespace GraphicsWpfLibrary
             RenderName(dc, foreBrush);
         }
 
-        private void RenderShapes(DrawingContext dc, Pen sectionPen, bool isBlocked)
+        private void RenderShapes(DrawingContext dc, Pen sectionPen, bool isBlocked, bool isSingleLocked)
         {
             switch (Status.Position)
             {
                 case RailswitchPosition.None:
-                    DrawSectionLines(dc, sectionPen, sectionPen, sectionPen, isBlocked);
-                    DrawFlashNails(dc, SectionView.ClearPen, isBlocked);
+                    DrawSectionLines(dc, sectionPen, sectionPen, sectionPen, isBlocked, isSingleLocked);
+                    DrawFlashNails(dc, SectionView.ClearPen, isBlocked, isSingleLocked);
                     break;
                 case RailswitchPosition.Fault:
-                    DrawSectionLines(dc, sectionPen, sectionPen, sectionPen, isBlocked);
-                    DrawFlashNails(dc, SectionView.OccupyPen, isBlocked);
+                    DrawSectionLines(dc, sectionPen, sectionPen, sectionPen, isBlocked, isSingleLocked);
+                    DrawFlashNails(dc, SectionView.OccupyPen, isBlocked, isSingleLocked);
                     break;
                 case RailswitchPosition.Normal:
-                    DrawSectionLines(dc, sectionPen, sectionPen, SectionView.ClearPen, isBlocked);
-                    DrawNail(dc, sectionPen, NormalNail, isBlocked);
+                    DrawSectionLines(dc, sectionPen, sectionPen, SectionView.ClearPen, isBlocked, isSingleLocked);
+                    DrawNail(dc, sectionPen, NormalNail, isBlocked, isSingleLocked);
                     break;
                 case RailswitchPosition.Reverse:
-                    DrawSectionLines(dc, sectionPen, SectionView.ClearPen, sectionPen, isBlocked);
-                    DrawNail(dc, sectionPen, ReverseNail, isBlocked);
+                    DrawSectionLines(dc, sectionPen, SectionView.ClearPen, sectionPen, isBlocked, isSingleLocked);
+                    DrawNail(dc, sectionPen, ReverseNail, isBlocked, isSingleLocked);
                     break;
                 default:
                     break;
             }
         }
 
-        private void DrawFlashNails(DrawingContext dc, Pen nailPen, bool isBlocked)
+        private void DrawFlashNails(DrawingContext dc, Pen nailPen, bool isBlocked, bool isSingleLocked)
         {
             if (flashFlag)
             {
-                DrawNail(dc, nailPen, NormalNail, isBlocked);
-                DrawNail(dc, nailPen, ReverseNail, isBlocked);
+                DrawNail(dc, nailPen, NormalNail, isBlocked, isSingleLocked);
+                DrawNail(dc, nailPen, ReverseNail, isBlocked, isSingleLocked);
             }
         }
 
-        private void DrawSectionLines(DrawingContext dc, Pen sectionPen, Pen normalPen, Pen reversePen, bool isBlocked)
+        private void DrawSectionLines(DrawingContext dc, Pen sectionPen, Pen normalPen, Pen reversePen
+            , bool isBlocked, bool isSingleLocked)
         {
-            SectionView.DrawSectionLines(dc, sectionPen, SectionLines, isBlocked);
-            SectionView.DrawSectionLines(dc, normalPen, NormalLines, isBlocked);
-            SectionView.DrawSectionLines(dc, reversePen, ReverseLines, isBlocked);
+            SectionView.DrawSectionLines(dc, sectionPen, SectionLines, isBlocked, isSingleLocked);
+            SectionView.DrawSectionLines(dc, normalPen, NormalLines, isBlocked, isSingleLocked);
+            SectionView.DrawSectionLines(dc, reversePen, ReverseLines, isBlocked, isSingleLocked);
         }
 
-        private static void DrawNail(DrawingContext dc, Pen pen, Line nail, bool isBlocked)
+        private static void DrawNail(DrawingContext dc, Pen pen, Line nail
+            , bool isBlocked, bool isSingleLocked)
         {
             if (isBlocked)
                 nail.Render(dc, SectionView.BlockPen);
+
+            if (isSingleLocked)
+                nail.Render(dc, SectionView.SingleLockPen);
 
             nail.Render(dc, pen);
         }
@@ -128,6 +134,35 @@ namespace GraphicsWpfLibrary
             Shapes.AddRange(SectionLines);
             Shapes.AddRange(NormalLines);
             Shapes.AddRange(ReverseLines);
+        }
+
+        public override void AddShape(Shape shape)
+        {
+            if (shape is Line connectLine)
+            {
+                if (AddConnectLine(connectLine, SectionLines))
+                    return;
+
+                if (AddConnectLine(connectLine, ReverseLines))
+                    return;
+
+                if (AddConnectLine(connectLine, NormalLines))
+                    return;
+            }
+        }
+
+        private static bool AddConnectLine(Line connectLine, List<Line> lines)
+        {
+            Point temp;
+            foreach (var line in lines)
+                if (connectLine.InRange(line.Pt0, ref temp, 1)
+                    || connectLine.InRange(line.Pt1, ref temp, 1))
+                {
+                    lines.Add(connectLine);
+                    return true;
+                }
+
+            return false;
         }
     }
 }

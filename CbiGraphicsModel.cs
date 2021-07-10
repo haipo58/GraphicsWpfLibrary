@@ -20,6 +20,7 @@ namespace GraphicsWpfLibrary
         [XmlElement("Text", typeof(TextView))]
         [XmlElement("Station", typeof(StationView))]
         [XmlElement("PSDoor", typeof(PSDoorView))]
+        [XmlElement("DeviceButton", typeof(DeviceButtonView))]
         public List<GraphicView> Graphics { get; set; } = new List<GraphicView>();
 
         public void Save(string fileName)
@@ -54,13 +55,11 @@ namespace GraphicsWpfLibrary
             graphicsModel.RestoreRailswitchShapes();
             graphicsModel.InitializeGraphics(canvas);
 
-            AddtoModels(new CbiModel(), graphicsModel.Graphics)
-                .Initialize();
-
+            AddtoModels(new CbiModel(), graphicsModel.Graphics);
             return graphicsModel;
         }
 
-        public void SetSignalsDirection(DeviceDirection rightDirection)
+        public CbiGraphicsModel SetSignalsDirection(DeviceDirection rightDirection)
         {
             DeviceDirection leftDirection = rightDirection == DeviceDirection.UpDir
                 ? DeviceDirection.DownDir : DeviceDirection.UpDir;
@@ -68,6 +67,8 @@ namespace GraphicsWpfLibrary
             foreach (var graphic in Graphics)
                 if (graphic is SignalView signal)
                     signal.Model.Direction = signal.IsLeftSide ? leftDirection : rightDirection;
+
+            return this;
         }
 
         public static CbiModel AddtoModels(CbiModel cbiModel, List<GraphicView> graphics)
