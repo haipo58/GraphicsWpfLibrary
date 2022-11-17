@@ -1,25 +1,35 @@
-﻿using System.Windows.Media;
+﻿using RailwaySignalsModels;
+using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace GraphicsWpfLibrary
 {
     public class LineView : GraphicView
     {
-        public static Pen LinePen { get; set; }
+        private Pen pen = new Pen(Brushes.AliceBlue, 3);
+        [XmlIgnore, PropertyIgnore]
+        public Brush ForeBrush
+        {
+            get => pen.Brush;
+            set => pen.Brush = value;
+        }
 
-        public override bool IsSelected 
-        { 
-            get => base.IsSelected; 
+        [XmlAttribute]
+        public string SBrush
+        {
+            get => ForeBrush.ToString();
             set
             {
-                base.IsSelected = value;
-                UI.InvalidateVisual();
+                Color color = (Color)ColorConverter.ConvertFromString(value);
+                ForeBrush = new SolidColorBrush(color);
             }
         }
 
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            RenderDefaultShpaes(dc);
+            foreach (var shape in Shapes)
+                shape.Render(dc, pen);
         }
     }
 }

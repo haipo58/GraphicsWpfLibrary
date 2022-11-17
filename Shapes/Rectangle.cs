@@ -10,12 +10,24 @@ namespace GraphicsWpfLibrary
         [XmlIgnore]
         public Rect Rect { get; set; }
 
-        [PropertyIgnore]
-        [XmlAttribute]
+        [XmlAttribute, PropertyIgnore]
         public string SRect
         {
             get => Rect.ToString();
             set => Rect = Rect.Parse(value);
+        }
+
+        [XmlIgnore, PropertyIgnore]
+        public Brush ForeBrush { get; set; } = Brushes.Black;
+
+        [XmlAttribute]
+        public string SBrush
+        {
+            get => ForeBrush.ToString();
+            set {
+                Color color = (Color)ColorConverter.ConvertFromString(value);
+                ForeBrush = new SolidColorBrush(color);
+            }
         }
 
         public override void FlipX(double flipBase) =>
@@ -28,6 +40,6 @@ namespace GraphicsWpfLibrary
             Rect = new Rect(Rect.X + x, Rect.Y + y, Rect.Width, Rect.Height);
 
         public override void Render(DrawingContext dc, Pen pen = null, Brush brush = null)
-            => dc.DrawRectangle(brush, pen, Rect);
+            => dc.DrawRectangle(brush??ForeBrush, pen, Rect);
     }
 }

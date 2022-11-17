@@ -19,7 +19,11 @@ namespace GraphicsWpfLibrary
         }
 
         [XmlIgnore]
-        public Point Pt1 { get; set; }
+        public Point Pt1 
+        { 
+            get; 
+            set; 
+        }
 
         [PropertyIgnore]
         [XmlAttribute]

@@ -7,6 +7,7 @@ namespace GraphicsWpfLibrary
     public class FlashTimer
     {
         private readonly Canvas canvas;
+        public event Action Flash;
 
         public FlashTimer(Canvas canvas)
         {
@@ -19,6 +20,7 @@ namespace GraphicsWpfLibrary
 
         private void OnTimer(object sender, EventArgs e)
         {
+            Flash?.Invoke();
             foreach (var item in canvas.Children)
                 if (item is UIRender ui)
                 {

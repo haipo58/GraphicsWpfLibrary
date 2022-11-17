@@ -45,19 +45,37 @@ namespace GraphicsWpfLibrary
 
         [PropertyIgnore]
         public Line ReverseNail { get; set; }
+
+        static public int Angle { get; set; } = 45;
         #endregion
 
         #region render
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            RenderShapes(dc, SectionView.GetSectionPen(SectionStatus), SectionStatus.IsBlocked, Status.IsSingleLocked);
+
+            RenderShapes(dc, SectionView.GetSectionPen(SectionStatus),
+                SectionStatus.IsBlocked,
+                Status.IsSingleLocked);
+
             RenderName(dc);
+            DrawInsuLines(dc);
+        }
+
+        public void DrawInsuLines(DrawingContext dc)
+        {
+            if (SectionView.InsulationsVisable && !string.IsNullOrEmpty(Model.DoubleName))
+                SectionView.DrawInsuLine(dc, ReverseLines[0].Pt1,
+                    Model.IsLeftOpen == Model.IsUpOpen ? Angle : -Angle);
         }
 
         public override void RenderName(DrawingContext dc)
         {
+            if (!IsNameVisable)
+                return;
+
             Brush foreBrush = Brushes.Silver;
+
             if (Status.Position == RailswitchPosition.Fault)
                 foreBrush = Brushes.White;
             if (NameFlashFlag && IsSelected)
@@ -66,7 +84,7 @@ namespace GraphicsWpfLibrary
             RenderName(dc, foreBrush);
         }
 
-        private void RenderShapes(DrawingContext dc, Pen sectionPen, bool isBlocked, bool isSingleLocked)
+        public virtual void RenderShapes(DrawingContext dc, Pen sectionPen, bool isBlocked, bool isSingleLocked)
         {
             switch (Status.Position)
             {
@@ -91,7 +109,7 @@ namespace GraphicsWpfLibrary
             }
         }
 
-        private void DrawFlashNails(DrawingContext dc, Pen nailPen, bool isBlocked, bool isSingleLocked)
+        protected void DrawFlashNails(DrawingContext dc, Pen nailPen, bool isBlocked, bool isSingleLocked)
         {
             if (flashFlag)
             {
@@ -100,7 +118,7 @@ namespace GraphicsWpfLibrary
             }
         }
 
-        private void DrawSectionLines(DrawingContext dc, Pen sectionPen, Pen normalPen, Pen reversePen
+        protected void DrawSectionLines(DrawingContext dc, Pen sectionPen, Pen normalPen, Pen reversePen
             , bool isBlocked, bool isSingleLocked)
         {
             SectionView.DrawSectionLines(dc, sectionPen, SectionLines, isBlocked, isSingleLocked);
@@ -108,7 +126,7 @@ namespace GraphicsWpfLibrary
             SectionView.DrawSectionLines(dc, reversePen, ReverseLines, isBlocked, isSingleLocked);
         }
 
-        private static void DrawNail(DrawingContext dc, Pen pen, Line nail
+        protected static void DrawNail(DrawingContext dc, Pen pen, Line nail
             , bool isBlocked, bool isSingleLocked)
         {
             if (isBlocked)

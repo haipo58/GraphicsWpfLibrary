@@ -13,8 +13,15 @@ namespace GraphicsWpfLibrary
         [XmlIgnore, PropertyIgnore]
         public UIRender UI { get; }
 
+        [XmlAttribute]
+        public double RotationAngle
+        {
+            get => (UI.RenderTransform is RotateTransform rotation) ? rotation.Angle : 0;
+            set => UI.RenderTransform = new RotateTransform(value, 0, 0);
+        }
+
         [XmlIgnore]
-        public Point TopLeft
+        public virtual Point TopLeft
         {
             get => new(Canvas.GetLeft(UI), Canvas.GetTop(UI));
             set

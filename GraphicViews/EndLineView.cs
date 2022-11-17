@@ -7,7 +7,8 @@ namespace GraphicsWpfLibrary
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            RenderDefaultShpaes(dc);
+            foreach (var item in Shapes)
+                item.Render(dc, SectionView.LockPen);
         }
     }
 }

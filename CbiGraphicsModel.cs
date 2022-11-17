@@ -19,8 +19,10 @@ namespace GraphicsWpfLibrary
         [XmlElement("End", typeof(EndLineView))]
         [XmlElement("Text", typeof(TextView))]
         [XmlElement("Station", typeof(StationView))]
-        [XmlElement("PSDoor", typeof(PSDoorView))]
+        //[XmlElement("PSDoor", typeof(PSDoorView))]
         [XmlElement("DeviceButton", typeof(DeviceButtonView))]
+        //[XmlElement("StationButton", typeof(StationButtonView))]
+        [XmlElement("RectView", typeof(RectView))]
         public List<GraphicView> Graphics { get; set; } = new List<GraphicView>();
 
         public void Save(string fileName)
@@ -74,8 +76,18 @@ namespace GraphicsWpfLibrary
         public static CbiModel AddtoModels(CbiModel cbiModel, List<GraphicView> graphics)
         {
             foreach (var graphic in graphics)
+            {
                 if (graphic is DeviceView device)
                     cbiModel.Devices.Add(device.DeviceInfo);
+                else if (graphic is StationView station)
+                {
+                    foreach (var item in station.Doors)
+                        cbiModel.Devices.Add(item.DeviceInfo);
+
+                    foreach (var item in station.Buttons)
+                        cbiModel.Devices.Add(item.DeviceInfo);
+                }
+            }
 
             return cbiModel;
         }
@@ -87,16 +99,13 @@ namespace GraphicsWpfLibrary
                 if (graphic is DeviceView device)
                 {
                     device.CreateFormattedName();
-                    device.DeviceInfo.NameChangedAction += device.CreateFormattedName;
+                    device.DeviceInfo.NameChangedAction += () => device.CreateFormattedName();
 
                     if (device is SignalView signal)
                         signal.LoadFromShapes();
                 }
                 else if (graphic is StationView station)
-                {
-                    foreach (var door in station.Doors)
-                        canvas.Children.Add(door.UI);
-                }
+                    station.AddChildren2Canvas(canvas);
 
                 canvas.Children.Add(graphic.UI);
             }

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace GraphicsWpfLibrary
 {
-    public class PSDoorView : DeviceView, IStationDevice
+    public class PSDoorView : DeviceView
     {
         [PropertyIgnore, XmlIgnore]
         public override DeviceModel DeviceInfo => Model;
@@ -14,9 +14,6 @@ namespace GraphicsWpfLibrary
 
         [PropertyIgnore, XmlIgnore]
         public PSDoorStatus Status { get; } = new();
-
-        [PropertyIgnore, XmlIgnore]
-        public bool IsRouteReady => Status.IsPassby || !Status.IsOpen;
 
         public override void Render(DrawingContext dc)
         {

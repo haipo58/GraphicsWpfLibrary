@@ -7,6 +7,9 @@ namespace GraphicsWpfLibrary
     public class CommandDevice : DeviceView, IFlashItem
     {
         [PropertyIgnore, XmlIgnore]
+        public bool IsNameVisable { get; set; } = true;
+
+        [PropertyIgnore, XmlIgnore]
         public bool NameFlashFlag { get; private set; }
 
         [PropertyIgnore, XmlIgnore]
@@ -23,15 +26,18 @@ namespace GraphicsWpfLibrary
         [PropertyIgnore, XmlIgnore]
         public virtual bool IsFlashing => IsSelected;
 
+        [PropertyIgnore, XmlIgnore]
+        public Brush ForeBrush { get; set; } = Brushes.Silver;
+
         public virtual void OnFlashTimer() => NameFlashFlag = !NameFlashFlag;
 
         public virtual void RenderName(DrawingContext dc)
         {
-            var foreBrush = Brushes.Silver;
-            if (NameFlashFlag && IsSelected)
-                foreBrush = Brushes.DarkSlateGray;
+            if (!IsNameVisable)
+                return;
 
-            RenderName(dc, foreBrush);
+            ForeBrush = NameFlashFlag && IsSelected ? Brushes.DarkSlateGray : Brushes.Silver;
+            RenderName(dc, ForeBrush);
         }
     }
 }
