@@ -1,4 +1,6 @@
-﻿using RailwaySignalsModels;
+﻿using GraphicsWpfLibrary.GraphicViews;
+using RailwaySignalsModels;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -6,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace GraphicsWpfLibrary
 {
-    public class StationView : GraphicView
+    public class StationView : GraphicView, IContainerView
     {
         [XmlAttribute]
         public string Name { get; set; }
@@ -51,6 +53,7 @@ namespace GraphicsWpfLibrary
             }
         }
 
+        [XmlIgnore]
         public override Point TopLeft 
         { 
             get => base.TopLeft;
@@ -86,6 +89,28 @@ namespace GraphicsWpfLibrary
                     canvas.Children.Add(item.UI);
 
             Canvas.SetZIndex(UI, -1);
+        }
+
+        public void AddChildren2Models(CbiModel cbiModel)
+        {
+            if (Doors is not null)
+                foreach (var item in Doors)
+                    cbiModel.Devices.Add(item.DeviceInfo);
+
+            if (Buttons is not null)
+                foreach (var item in Buttons)
+                    cbiModel.Devices.Add(item.DeviceInfo);
+        }
+
+        public void RemoveFromGrahics(List<GraphicView> graphics)
+        {
+            if (Doors is not null)
+                foreach (var item in Doors)
+                    graphics.Remove(item);
+
+            if (Buttons is not null)
+                foreach (var item in Buttons)
+                    graphics.Remove(item);
         }
 
         private static readonly Pen rectPen = new Pen(Brushes.Silver, 3);

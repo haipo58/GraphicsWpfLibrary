@@ -26,7 +26,7 @@ namespace GraphicsWpfLibrary
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
-            DrawSectionLines(dc, GetSectionPen(Status), Shapes, Status.IsBlocked);
+            DrawSectionLines(dc, GetSectionPen(Status), Shapes, Status.IsBlocked, Status.IsFenLuBuLiang);
 
             if (InsulationsVisable)
                 DrawInsulations(dc);
@@ -59,12 +59,15 @@ namespace GraphicsWpfLibrary
         }
 
         public static void DrawSectionLines(DrawingContext dc, Pen pen, IEnumerable<Shape> shapes
-            , bool isBlocked, bool isSingleLocked = false)
+            , bool isBlocked, bool isFenLuBuLiang, bool isSingleLocked = false)
         {
             foreach (var line in shapes)
             {
                 if (isBlocked)
                     line.Render(dc, BlockPen);
+
+                if (isFenLuBuLiang)
+                    line.Render(dc, FenLuBuLiangPen);
 
                 if (isSingleLocked)
                     line.Render(dc, SingleLockPen);
@@ -97,9 +100,10 @@ namespace GraphicsWpfLibrary
         public static Pen OccupyPen { get; private set; } = new Pen(Brushes.Red, 3);
         public static Pen LockPen { get; private set; } = new Pen(Brushes.White, 3);
         public static Pen BlockPen { get; private set; } = new Pen(Brushes.Red, 7);
+        public static Pen FenLuBuLiangPen { get; private set; } = new Pen(Brushes.Pink, 7);
         public static Pen SingleLockPen { get; private set; } = new Pen(Brushes.Silver, 7);
         public static Pen ProtectPen { get; private set; } = new Pen(Brushes.Yellow, 3);
-        public static Pen ClearPen { get; set; } = new Pen(Brushes.Cyan, 3);
+        public static Pen ClearPen { get; set; } = new Pen(new SolidColorBrush(Color.FromRgb(85, 120, 182)), 3);
         public static Pen InsulationPen { get; set; } = new Pen(Brushes.White, 3);
         #endregion Pens
     }

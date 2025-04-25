@@ -13,16 +13,16 @@ namespace GraphicsWpfLibrary
         public DeviceButtonModel Model { get; set; }
 
         [PropertyIgnore, XmlIgnore]
-        public RelayStatus Status { get; } = new();
+        public DeviceButtonStatus Status { get; } = new();
 
         [XmlIgnore]
-        public Brush ToggleBrush { get; set; } = Brushes.Gray;
+        public Brush ToggleBrush { get; set; } = Brushes.Yellow;
 
         public override void Render(DrawingContext dc)
         {
             base.Render(dc);
 
-            (Shapes[0] as Rectangle).Render(dc, BorderPen, Status.IsUp ? Brushes.Gray : ToggleBrush);
+            (Shapes[0] as Rectangle).Render(dc, BorderPen, Status.IsUp ? ToggleBrush : Brushes.Gray);
             RenderName(dc);
         }
 

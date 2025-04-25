@@ -36,8 +36,8 @@ namespace GraphicsWpfLibrary
             if (!IsNameVisable)
                 return;
 
-            ForeBrush = NameFlashFlag && IsSelected ? Brushes.DarkSlateGray : Brushes.Silver;
-            RenderName(dc, ForeBrush);
+            var brush = NameFlashFlag && IsSelected ? Brushes.DarkSlateGray : ForeBrush;
+            RenderName(dc, brush);
         }
     }
 }

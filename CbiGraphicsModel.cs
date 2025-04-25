@@ -1,4 +1,6 @@
-﻿using RailwaySignalsModels;
+﻿using GraphicsWpfLibrary.DeviceViews;
+using GraphicsWpfLibrary.GraphicViews;
+using RailwaySignalsModels;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
@@ -19,10 +21,11 @@ namespace GraphicsWpfLibrary
         [XmlElement("End", typeof(EndLineView))]
         [XmlElement("Text", typeof(TextView))]
         [XmlElement("Station", typeof(StationView))]
-        //[XmlElement("PSDoor", typeof(PSDoorView))]
         [XmlElement("DeviceButton", typeof(DeviceButtonView))]
-        //[XmlElement("StationButton", typeof(StationButtonView))]
         [XmlElement("RectView", typeof(RectView))]
+        [XmlElement("StatusLight", typeof(StatusLightView))]
+        [XmlElement("ArrowView", typeof(ArrowView))]
+        [XmlElement("ChangeDirPanel", typeof(ChangeDirectionPanelView))]
         public List<GraphicView> Graphics { get; set; } = new List<GraphicView>();
 
         public void Save(string fileName)
@@ -79,14 +82,8 @@ namespace GraphicsWpfLibrary
             {
                 if (graphic is DeviceView device)
                     cbiModel.Devices.Add(device.DeviceInfo);
-                else if (graphic is StationView station)
-                {
-                    foreach (var item in station.Doors)
-                        cbiModel.Devices.Add(item.DeviceInfo);
-
-                    foreach (var item in station.Buttons)
-                        cbiModel.Devices.Add(item.DeviceInfo);
-                }
+                else if (graphic is IContainerView container)
+                    container.AddChildren2Models(cbiModel);
             }
 
             return cbiModel;
@@ -104,7 +101,7 @@ namespace GraphicsWpfLibrary
                     if (device is SignalView signal)
                         signal.LoadFromShapes();
                 }
-                else if (graphic is StationView station)
+                else if (graphic is IContainerView station)
                     station.AddChildren2Canvas(canvas);
 
                 canvas.Children.Add(graphic.UI);
