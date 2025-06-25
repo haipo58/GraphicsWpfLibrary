@@ -1,12 +1,14 @@
-﻿using System.Windows.Media;
+﻿using GraphicsWpfLibrary.DeviceViews;
 
 namespace GraphicsWpfLibrary
 {
     public class EndLineView : GraphicView
     {
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
-            base.Render(dc);
+            using var dc = Drawing.Open();
+
+            AdditionalRenderAction?.Invoke(dc);
             foreach (var item in Shapes)
                 item.Render(dc, SectionView.LockPen);
         }

@@ -76,7 +76,11 @@ namespace GraphicsWpfLibrary
             }
         }
 
-        public override void Render(DrawingContext dc) => Shapes[0].Render(dc, rectPen);
+        public override void Render()
+        {
+            using var dc = Drawing.Open();
+            Shapes[0].Render(dc, rectPen);
+        }
 
         public void AddChildren2Canvas(Canvas canvas)
         {

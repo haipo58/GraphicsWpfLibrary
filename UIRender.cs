@@ -7,6 +7,6 @@ namespace GraphicsWpfLibrary
     {
         public GraphicView Graphic { get; set; }
 
-        protected override void OnRender(DrawingContext dc) => Graphic.Render(dc);
+        protected override void OnRender(DrawingContext dc) => dc.DrawDrawing(Graphic.Drawing);
     }
 }

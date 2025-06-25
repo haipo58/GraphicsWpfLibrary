@@ -1,4 +1,5 @@
-﻿using RailwaySignalsModels;
+﻿using GraphicsWpfLibrary.DeviceViews;
+using RailwaySignalsModels;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
@@ -15,9 +16,9 @@ namespace GraphicsWpfLibrary
         [PropertyIgnore, XmlIgnore]
         public RelayStatus Status { get; } = new();
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
-            base.Render(dc);
+            using var dc = Drawing.Open();
 
             (Shapes[0] as Rectangle).Render(dc, DeviceButtonView.BorderPen, Status.IsUp ? Brushes.Gray : Brushes.Red);
             RenderName(dc);

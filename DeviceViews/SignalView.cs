@@ -113,9 +113,11 @@ namespace GraphicsWpfLibrary.DeviceViews
 
         private static double Radian(double angle) => angle / 180 * Math.PI;
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
-            base.Render(dc);
+            using var dc = Drawing.Open();
+
+            AdditionalRenderAction?.Invoke(dc);
             RenderLines(dc);
 
             if (ShowRectButtons)

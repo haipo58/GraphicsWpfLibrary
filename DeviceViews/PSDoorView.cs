@@ -15,8 +15,9 @@ namespace GraphicsWpfLibrary
         [PropertyIgnore, XmlIgnore]
         public PSDoorStatus Status { get; } = new();
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
+            using DrawingContext dc = Drawing.Open();
             Pen pen = Status.IsPassby ? PassbyPen
                 : Status.IsOpen ? OpenPen : ClosePen;
 

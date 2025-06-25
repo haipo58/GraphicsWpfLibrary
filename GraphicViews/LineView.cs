@@ -25,9 +25,11 @@ namespace GraphicsWpfLibrary
             }
         }
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
-            base.Render(dc);
+            using var dc = Drawing.Open();
+
+            AdditionalRenderAction?.Invoke(dc);
             foreach (var shape in Shapes)
                 shape.Render(dc, pen);
         }

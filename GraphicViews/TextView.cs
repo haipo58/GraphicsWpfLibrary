@@ -57,9 +57,13 @@ namespace GraphicsWpfLibrary
             UI.InvalidateVisual();
         }
 
-        public override void Render(DrawingContext dc) => dc.DrawText(fmtText, new Point());
+        public override void Render()
+        {
+            using var dc = Drawing.Open();
+            dc.DrawText(fmtText, new Point());
+        }
 
-        private static Dictionary<string, Brush> brushMap = new Dictionary<string, Brush>()
+        private static Dictionary<string, Brush> brushMap = new()
         {
             {"Red", Brushes.Red},
             {"Green", Brushes.Green},

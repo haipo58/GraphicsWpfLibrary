@@ -40,8 +40,9 @@ namespace GraphicsWpfLibrary.DeviceViews
             rect = new Rect(height, height / 2, width, height);
         }
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
+            using var dc = Drawing.Open();
             var brush = Status.Direction switch
             {
                 ArrowDirection.Arrive => Brushes.Yellow,

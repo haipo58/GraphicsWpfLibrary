@@ -1,13 +1,10 @@
-﻿using RailwaySignalsModels;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace GraphicsWpfLibrary.GraphicViews
 {
-    public class BoxView : GraphicView, IContainerView
+    public class BoxView : GraphicView
     {
         private FormattedText _formattedName;
 
@@ -35,8 +32,10 @@ namespace GraphicsWpfLibrary.GraphicViews
                     new Typeface("微软雅黑"), fontSize, Brushes.Silver, pixelPerDip);
         }
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
+            using var dc = Drawing.Open();
+
             Shapes[0].Render(dc, ChangeDirectionPanelView.RectPen);
 
             if (_formattedName == null) return;
@@ -48,16 +47,16 @@ namespace GraphicsWpfLibrary.GraphicViews
             dc.DrawText(_formattedName, NamePos);
         }
 
-        public void AddChildren2Canvas(Canvas canvas)
-        {
-        }
+        //public void AddChildren2Canvas(Canvas canvas)
+        //{
+        //}
 
-        public void AddChildren2Models(CbiModel cbiModel)
-        {
-        }
+        //public void AddChildren2Models(CbiModel cbiModel)
+        //{
+        //}
 
-        public void RemoveFromGrahics(List<GraphicView> graphics)
-        {
-        }
+        //public void RemoveFromGrahics(List<GraphicView> graphics)
+        //{
+        //}
     }
 }

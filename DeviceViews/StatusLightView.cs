@@ -12,9 +12,9 @@ namespace GraphicsWpfLibrary
         [PropertyIgnore, XmlIgnore]
         public StatusLightStatus Status { get; set; } = new();
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
-            base.Render(dc);
+            using var dc = Drawing.Open();
 
             var brush = Status.IsOn || (_isFlashing && !_flashFlag) ? ForeBrush : Brushes.Gray;
 

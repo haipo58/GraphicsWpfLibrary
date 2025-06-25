@@ -1,4 +1,5 @@
-﻿using RailwaySignalsModels;
+﻿using GraphicsWpfLibrary.DeviceViews;
+using RailwaySignalsModels;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
@@ -77,8 +78,10 @@ namespace GraphicsWpfLibrary.GraphicViews
         [XmlAttribute]
         public bool RenderBorder { get; set; } = true;
 
-        public override void Render(DrawingContext dc)
+        public override void Render()
         {
+            using var dc = Drawing.Open();
+
             if (RenderBorder)
                 Shapes[0].Render(dc, RectPen);
             else

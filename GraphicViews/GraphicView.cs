@@ -1,4 +1,5 @@
-﻿using RailwaySignalsModels;
+﻿using GraphicsWpfLibrary.DeviceViews;
+using RailwaySignalsModels;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -12,6 +13,9 @@ namespace GraphicsWpfLibrary
     {
         [XmlIgnore, PropertyIgnore]
         public UIRender UI { get; }
+
+        [XmlIgnore]
+        public DrawingGroup Drawing { get; } = new();
 
         [XmlAttribute]
         public double RotationAngle
@@ -46,12 +50,12 @@ namespace GraphicsWpfLibrary
         [PropertyIgnore, XmlIgnore]
         public virtual bool IsSelected { get; set; }
 
-        [XmlIgnore]
+        [PropertyIgnore]
         public Action<DrawingContext> AdditionalRenderAction;
 
         public GraphicView() => UI = new() { Graphic = this };
 
-        public virtual void Render(DrawingContext dc) => AdditionalRenderAction?.Invoke(dc);
+        public virtual void Render() { }
 
         public void RenderDefaultShpaes(DrawingContext dc)
         {
